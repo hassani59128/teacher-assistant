@@ -277,6 +277,14 @@ val createExcelTemplate =
 ) {
     Text("دریافت قالب Excel")
 }
+                    Button(
+    onClick = {
+        // انتخاب فایل Excel در مرحله بعد فعال می‌شود
+    },
+    modifier = Modifier.fillMaxWidth()
+) {
+    Text("ورود دانش‌آموزان از Excel")
+}
                     SelectionDropdown(
                         label = "انتخاب مدرسه",
                         selected = schools.firstOrNull {
