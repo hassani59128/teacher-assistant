@@ -305,16 +305,18 @@ val createExcelTemplate =
 ) {
     Text("دریافت قالب Excel")
 }
-                    Button(
+
+Button(
     onClick = {
-    openExcelFile.launch(
-        arrayOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    )
-}
+        openExcelFile.launch(
+            arrayOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        )
+    },
     modifier = Modifier.fillMaxWidth()
 ) {
     Text("ورود دانش‌آموزان از Excel")
 }
+
                     SelectionDropdown(
                         label = "انتخاب مدرسه",
                         selected = schools.firstOrNull {
