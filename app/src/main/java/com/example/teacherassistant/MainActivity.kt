@@ -317,42 +317,51 @@ Button(
     Text("ورود دانش‌آموزان از Excel")
 }
 
+
 if (excelRows.isNotEmpty()) {
     Text(
         text = "پیش‌نمایش اطلاعات (${excelRows.size} ردیف)",
         style = MaterialTheme.typography.titleMedium
     )
 
-    excelRows.forEach { row ->
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(12.dp)
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(max = 350.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        items(excelRows, key = { it.rowNumber }) { row ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
             ) {
-                Text("ردیف اکسل: ${row.rowNumber}")
-                Text("نام خانوادگی: ${row.lastName}")
-                Text("نام: ${row.firstName}")
-                Text("شماره دانش‌آموزی: ${row.studentNumber}")
-                Text("نام پدر: ${row.fatherName}")
+                Column(
+                    modifier = Modifier.padding(12.dp)
+                ) {
+                    Text("ردیف اکسل: ${row.rowNumber}")
+                    Text("نام خانوادگی: ${row.lastName}")
+                    Text("نام: ${row.firstName}")
+                    Text("شماره دانش‌آموزی: ${row.studentNumber}")
+                    Text("نام پدر: ${row.fatherName}")
 
-                if (row.isValid) {
-                    Text(
-                        text = "وضعیت: معتبر",
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                } else {
-                    Text(
-                        text = "وضعیت: ${row.error}",
-                        color = MaterialTheme.colorScheme.error
-                    )
+                    if (row.isValid) {
+                        Text(
+                            text = "وضعیت: معتبر",
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    } else {
+                        Text(
+                            text = "وضعیت: ${row.error}",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
                 }
             }
         }
     }
 }
+
 
                     SelectionDropdown(
                         label = "انتخاب مدرسه",
