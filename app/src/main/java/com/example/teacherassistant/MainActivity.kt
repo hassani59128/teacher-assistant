@@ -389,6 +389,60 @@ if (excelRows.isNotEmpty()) {
 
                     if (studentClassId != null) {
 
+Button(
+    onClick = {
+        val targetClassId = studentClassId
+
+        if (targetClassId != null) {
+            scope.launch {
+                try {
+                    var addedCount = 0
+                    var duplicateCount = 0
+
+                    val validRows = excelRows.filter { it.isValid }
+
+                    validRows.forEach { row ->
+                        val result = db.studentDao().insert(
+                            Student(
+                                classId = targetClassId,
+                                lastName = row.lastName,
+                                firstName = row.firstName,
+                                studentNumber = row.studentNumber,
+                                fatherName = row.fatherName
+                            )
+                        )
+
+                        if (result == -1L) {
+                            duplicateCount++
+                        } else {
+                            addedCount++
+                        }
+                    }
+
+                    Toast.makeText(
+                        context,
+                        "$addedCount دانش‌آموز ثبت شد؛ $duplicateCount مورد تکراری بود.",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    excelRows = emptyList()
+
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        context,
+                        "خطا در ثبت اطلاعات: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    },
+    modifier = Modifier.fillMaxWidth(),
+    enabled = excelRows.any { it.isValid }
+) {
+    Text("ثبت دانش‌آموزان معتبر در این کلاس")
+}
+
                         OutlinedTextField(
                             value = studentSearch,
                             onValueChange = {
