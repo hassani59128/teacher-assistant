@@ -350,17 +350,30 @@ if (excelRows.isNotEmpty()) {
                     Text("شماره دانش‌آموزی: ${row.studentNumber}")
                     Text("نام پدر: ${row.fatherName}")
 
-                    if (row.isValid) {
-                        Text(
-                            text = "وضعیت: معتبر",
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    } else {
-                        Text(
-                            text = "وضعیت: ${row.error}",
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
+                   
+when {
+    !row.isValid -> {
+        Text(
+            text = "وضعیت: ${row.error}",
+            color = MaterialTheme.colorScheme.error
+        )
+    }
+
+    row.studentNumber in duplicateStudentNumbers -> {
+        Text(
+            text = "هشدار: شماره دانش‌آموزی در فایل تکراری است.",
+            color = MaterialTheme.colorScheme.error
+        )
+    }
+
+    else -> {
+        Text(
+            text = "وضعیت: معتبر",
+            color = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
                 }
             }
         }
