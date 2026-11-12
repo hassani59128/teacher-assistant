@@ -56,7 +56,35 @@ private fun TeacherAssistantApp(db: AppDatabase) {
         .collectAsStateWithLifecycle(emptyList())
 
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
+val createExcelTemplate =
+    rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument(
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+    ) { uri ->
+
+        if (uri != null) {
+            try {
+                ExcelTemplateWriter.write(context, uri)
+
+                Toast.makeText(
+                    context,
+                    "قالب Excel با موفقیت ذخیره شد.",
+                    Toast.LENGTH_LONG
+                ).show()
+
+            } catch (e: Exception) {
+
+                Toast.makeText(
+                    context,
+                    "خطا در ساخت فایل Excel: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
     var showAdd by remember { mutableStateOf(false) }
     var newName by remember { mutableStateOf("") }
     var selectedSchoolId by remember { mutableStateOf<Long?>(null) }
@@ -241,6 +269,14 @@ private fun TeacherAssistantApp(db: AppDatabase) {
 
                 Section.Students -> {
 
+                    Button(
+    onClick = {
+        createExcelTemplate.launch("قالب دانش‌آموزان.xlsx")
+    },
+    modifier = Modifier.fillMaxWidth()
+) {
+    Text("دریافت قالب Excel")
+}
                     SelectionDropdown(
                         label = "انتخاب مدرسه",
                         selected = schools.firstOrNull {
