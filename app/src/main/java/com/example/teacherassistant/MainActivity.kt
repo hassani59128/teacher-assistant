@@ -57,6 +57,34 @@ private fun TeacherAssistantApp(db: AppDatabase) {
 
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    var excelRows by remember {
+    mutableStateOf<List<ExcelStudentRow>>(emptyList())
+}
+
+val openExcelFile =
+    rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri ->
+
+        if (uri != null) {
+            try {
+                excelRows = ExcelStudentReader.read(context, uri)
+
+                Toast.makeText(
+                    context,
+                    "تعداد ${excelRows.size} ردیف از فایل خوانده شد.",
+                    Toast.LENGTH_LONG
+                ).show()
+
+            } catch (e: Exception) {
+                Toast.makeText(
+                    context,
+                    "خطا در خواندن فایل: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
 
 val createExcelTemplate =
     rememberLauncherForActivityResult(
@@ -279,8 +307,10 @@ val createExcelTemplate =
 }
                     Button(
     onClick = {
-        // انتخاب فایل Excel در مرحله بعد فعال می‌شود
-    },
+    openExcelFile.launch(
+        arrayOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    )
+}
     modifier = Modifier.fillMaxWidth()
 ) {
     Text("ورود دانش‌آموزان از Excel")
