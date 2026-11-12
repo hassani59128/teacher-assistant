@@ -317,7 +317,12 @@ Button(
     Text("ورود دانش‌آموزان از Excel")
 }
 
-
+val duplicateStudentNumbers = excelRows
+    .filter { it.isValid }
+    .groupingBy { it.studentNumber }
+    .eachCount()
+    .filter { it.value > 1 }
+    .keys
 if (excelRows.isNotEmpty()) {
     Text(
         text = "پیش‌نمایش اطلاعات (${excelRows.size} ردیف)",
