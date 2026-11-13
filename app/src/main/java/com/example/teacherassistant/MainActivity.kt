@@ -60,7 +60,9 @@ private fun TeacherAssistantApp(db: AppDatabase) {
     var excelRows by remember {
     mutableStateOf<List<ExcelStudentRow>>(emptyList())
 }
-
+var showExcelConfirmDialog by remember {
+    mutableStateOf(false)
+}
 val openExcelFile =
     rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
@@ -429,51 +431,7 @@ if (excelRows.isNotEmpty()) {
 
 Button(
     onClick = {
-        val targetClassId = studentClassId
-
-        if (targetClassId != null) {
-            scope.launch {
-                try {
-                    var addedCount = 0
-                    var duplicateCount = 0
-
-                    val validRows = excelRows.filter { it.isValid }
-
-                    validRows.forEach { row ->
-                        val result = db.studentDao().insert(
-                            Student(
-                                classId = targetClassId,
-                                lastName = row.lastName,
-                                firstName = row.firstName,
-                                studentNumber = row.studentNumber,
-                                fatherName = row.fatherName
-                            )
-                        )
-
-                        if (result == -1L) {
-                            duplicateCount++
-                        } else {
-                            addedCount++
-                        }
-                    }
-
-                    Toast.makeText(
-                        context,
-                        "$addedCount دانش‌آموز ثبت شد؛ $duplicateCount مورد تکراری بود.",
-                        Toast.LENGTH_LONG
-                    ).show()
-
-                    excelRows = emptyList()
-
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        context,
-                        "خطا در ثبت اطلاعات: ${e.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
+        showExcelConfirmDialog = true
     },
     modifier = Modifier.fillMaxWidth(),
     enabled = excelRows.any { it.isValid }
@@ -821,7 +779,87 @@ Button(
             }
         )
     }
+// Excel import confirmation
 
+if (showExcelConfirmDialog) {
+    AlertDialog(
+        onDismissRequest = {
+            showExcelConfirmDialog = false
+        },
+        title = {
+            Text("تأیید نهایی ثبت اطلاعات")
+        },
+        text = {
+            Text(
+                "تعداد ${excelRows.count { it.isValid }} دانش‌آموز معتبر ثبت خواهد شد. آیا مطمئن هستی؟"
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    showExcelConfirmDialog = false
+
+                    val targetClassId = studentClassId
+
+                    if (targetClassId != null) {
+                        scope.launch {
+                            try {
+                                var addedCount = 0
+                                var duplicateCount = 0
+
+                                val validRows = excelRows.filter { it.isValid }
+
+                                validRows.forEach { row ->
+                                    val result = db.studentDao().insert(
+                                        Student(
+                                            classId = targetClassId,
+                                            lastName = row.lastName,
+                                            firstName = row.firstName,
+                                            studentNumber = row.studentNumber,
+                                            fatherName = row.fatherName
+                                        )
+                                    )
+
+                                    if (result == -1L) {
+                                        duplicateCount++
+                                    } else {
+                                        addedCount++
+                                    }
+                                }
+
+                                Toast.makeText(
+                                    context,
+                                    "$addedCount دانش‌آموز ثبت شد؛ $duplicateCount مورد تکراری بود.",
+                                    Toast.LENGTH_LONG
+                                ).show()
+
+                                excelRows = emptyList()
+
+                            } catch (e: Exception) {
+                                Toast.makeText(
+                                    context,
+                                    "خطا در ثبت اطلاعات: ${e.message}",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+                    }
+                }
+            ) {
+                Text("بله، ثبت کن")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    showExcelConfirmDialog = false
+                }
+            ) {
+                Text("انصراف")
+            }
+        }
+    )
+}
     // Delete confirmation
 
     if (studentToDelete != null) {
