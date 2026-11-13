@@ -517,7 +517,7 @@ Column(
                 }
             }
         }
-
+    }
     // Dialog for adding school, class or lesson
 
     if (showAdd) {
