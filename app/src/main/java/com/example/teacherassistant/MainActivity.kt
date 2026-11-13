@@ -222,11 +222,12 @@ val createExcelTemplate =
         }
     ) { padding ->
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
+      Column(
+    modifier = Modifier
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState())
+        .padding(padding)
+        .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
@@ -460,73 +461,7 @@ Button(
                             )
                         }
 
-                        LazyColumn(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            items(
-                                filteredStudents,
-                                key = { it.id }
-                            ) { student ->
-
-                                ListItem(
-                                    headlineContent = {
-                                        Text(
-                                            "${student.firstName} ${student.lastName}"
-                                        )
-                                    },
-                                    supportingContent = {
-                                        Text(
-                                            "شماره دانش‌آموزی: ${student.studentNumber}\n" +
-                                                "نام پدر: ${student.fatherName}"
-                                        )
-                                    },
-                                    trailingContent = {
-                                        Row(
-                                            verticalAlignment =
-                                                Alignment.CenterVertically
-                                        ) {
-                                            TextButton(
-                                                onClick = {
-                                                    editingStudent = student
-                                                    lastName = student.lastName
-                                                    firstName = student.firstName
-                                                    studentNumber = student.studentNumber
-                                                    fatherName = student.fatherName
-                                                    studentError = null
-                                                    showStudentDialog = true
-                                                }
-                                            ) {
-                                                Text("ویرایش")
-                                            }
-
-                                            TextButton(
-                                                onClick = {
-                                                    studentToDelete = student
-                                                }
-                                            ) {
-                                                Text(
-                                                    "حذف",
-                                                    color = MaterialTheme.colorScheme.error
-                                                )
-                                            }
-                                        }
-                                    }
-                                )
-
-                                HorizontalDivider()
-                            }
-                        }
-                    } else {
-                        EmptyMessage(
-                            "برای مشاهده دانش‌آموزان، ابتدا مدرسه و کلاس را انتخاب کن."
-                        )
-                    }
-                }
-            }
-        }
-    }
-
+انجام شد
     // Dialog for adding school, class or lesson
 
     if (showAdd) {
