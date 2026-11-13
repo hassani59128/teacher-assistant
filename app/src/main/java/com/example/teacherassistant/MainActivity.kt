@@ -452,16 +452,72 @@ Button(
 
                         Text("تعداد دانش‌آموزان: ${students.size}")
 
-                        if (filteredStudents.isEmpty()) {
-                            EmptyMessage(
-                                if (students.isEmpty())
-                                    "هنوز دانش‌آموزی در این کلاس ثبت نشده است."
-                                else
-                                    "دانش‌آموزی با این مشخصات پیدا نشد."
-                            )
-                        }
+                        
+if (filteredStudents.isEmpty()) {
+    EmptyMessage(
+        if (students.isEmpty())
+            "هنوز دانش‌آموزی در این کلاس ثبت نشده است."
+        else
+            "دانش‌آموزی با این مشخصات پیدا نشد."
+    )
+}
 
-انجام شد
+Column(
+    modifier = Modifier.fillMaxWidth(),
+    verticalArrangement = Arrangement.spacedBy(6.dp)
+) {
+    filteredStudents.forEach { student ->
+
+        ListItem(
+            headlineContent = {
+                Text("${student.firstName} ${student.lastName}")
+            },
+            supportingContent = {
+                Text(
+                    "شماره دانش‌آموزی: ${student.studentNumber}\n" +
+                        "نام پدر: ${student.fatherName}"
+                )
+            },
+            trailingContent = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TextButton(
+                        onClick = {
+                            editingStudent = student
+                            lastName = student.lastName
+                            firstName = student.firstName
+                            studentNumber = student.studentNumber
+                            fatherName = student.fatherName
+                            studentError = null
+                            showStudentDialog = true
+                        }
+                    ) {
+                        Text("ویرایش")
+                    }
+
+                    TextButton(
+                        onClick = {
+                            studentToDelete = student
+                        }
+                    ) {
+                        Text(
+                            "حذف",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            }
+        )
+
+        HorizontalDivider()
+    }
+}
+                    }
+                }
+            }
+        }
+
     // Dialog for adding school, class or lesson
 
     if (showAdd) {
