@@ -323,6 +323,7 @@ val duplicateStudentNumbers = excelRows
     .eachCount()
     .filter { it.value > 1 }
     .keys
+
 if (excelRows.isNotEmpty()) {
     Text(
         text = "پیش‌نمایش اطلاعات (${excelRows.size} ردیف)",
@@ -341,60 +342,55 @@ if (excelRows.isNotEmpty()) {
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
             ) {
-               
-Column(
-    modifier = Modifier.padding(12.dp)
-) {
-    Text("ردیف اکسل: ${row.rowNumber}")
-    Text("نام خانوادگی: ${row.lastName}")
-    Text("نام: ${row.firstName}")
-    Text("شماره دانش‌آموزی: ${row.studentNumber}")
-    Text("نام پدر: ${row.fatherName}")
+                Column(
+                    modifier = Modifier.padding(12.dp)
+                ) {
+                    Text("ردیف اکسل: ${row.rowNumber}")
+                    Text("نام خانوادگی: ${row.lastName}")
+                    Text("نام: ${row.firstName}")
+                    Text("شماره دانش‌آموزی: ${row.studentNumber}")
+                    Text("نام پدر: ${row.fatherName}")
 
-    when {
-        !row.isValid -> {
-            Text(
-                text = "وضعیت: ${row.error}",
-                color = MaterialTheme.colorScheme.error
-            )
-        }
+                    when {
+                        !row.isValid -> {
+                            Text(
+                                text = "وضعیت: ${row.error}",
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
 
-        row.studentNumber in duplicateStudentNumbers -> {
-            Text(
-                text = "هشدار: شماره دانش‌آموزی در فایل تکراری است.",
-                color = MaterialTheme.colorScheme.error
-            )
-        }
+                        row.studentNumber in duplicateStudentNumbers -> {
+                            Text(
+                                text = "هشدار: شماره دانش‌آموزی در فایل تکراری است.",
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
 
-        else -> {
-            Text(
-                text = "وضعیت: معتبر",
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
-    }
+                        else -> {
+                            Text(
+                                text = "وضعیت: معتبر",
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
 
-    TextButton(
-        onClick = {
-            excelRows = excelRows.filterNot {
-                it.rowNumber == row.rowNumber
-            }
-        }
-    ) {
-        Text(
-            "حذف از فهرست",
-            color = MaterialTheme.colorScheme.error
-        )
-    }
-}
-
-
+                    TextButton(
+                        onClick = {
+                            excelRows = excelRows.filterNot {
+                                it.rowNumber == row.rowNumber
+                            }
+                        }
+                    ) {
+                        Text(
+                            "حذف از فهرست",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
                 }
             }
         }
     }
 }
-
 
                     SelectionDropdown(
                         label = "انتخاب مدرسه",
