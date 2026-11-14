@@ -38,9 +38,9 @@ private enum class Section(val title: String) {
     Schools("مدارس"),
     Classes("کلاس‌ها"),
     Lessons("درس‌ها"),
-    Students("دانش‌آموزان")
+    Students("دانش‌آموزان"),
+    Classroom("مدیریت کلاس")
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TeacherAssistantApp(db: AppDatabase) {
@@ -298,7 +298,7 @@ val createExcelTemplate =
                     }
                 }
 
-                Section.Students -> {
+                 {Section.Students ->
 
                     Button(
     onClick = {
@@ -516,6 +516,9 @@ Column(
                     }
                 }
             }
+                            Section.Classroom -> {
+                    ClassroomScreen()
+                }
         }
     }
     // Dialog for adding school, class or lesson
@@ -530,6 +533,7 @@ Column(
                         Section.Classes -> "افزودن کلاس"
                         Section.Lessons -> "افزودن درس"
                         Section.Students -> "افزودن دانش‌آموز"
+                        Section.Classroom -> "مدیریت کلاس"
                     }
                 )
             },
@@ -547,6 +551,7 @@ Column(
                                     Section.Classes -> "نام کلاس"
                                     Section.Lessons -> "نام درس"
                                     Section.Students -> "نام دانش‌آموز"
+                                    Section.Classroom -> "مدیریت کلاس"
                                 }
                             )
                         },
@@ -607,6 +612,7 @@ Column(
                                         )
 
                                     Section.Students -> Unit
+                                    Section.Classroom -> Unit
                                 }
                             }
 
