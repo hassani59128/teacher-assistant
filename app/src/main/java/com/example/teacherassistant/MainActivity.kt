@@ -298,7 +298,7 @@ val createExcelTemplate =
                     }
                 }
 
-                 {Section.Students ->
+                 Section.Students -> {
 
                     Button(
     onClick = {
@@ -515,10 +515,11 @@ Column(
 }
                     }
                 }
-            }
-                            Section.Classroom -> {
+                                Section.Classroom -> {
                     ClassroomScreen()
                 }
+            }
+
         }
     }
     // Dialog for adding school, class or lesson
