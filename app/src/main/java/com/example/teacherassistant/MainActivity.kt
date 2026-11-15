@@ -515,9 +515,9 @@ Column(
 }
                     }
                 }
-                                Section.Classroom -> {
-                    ClassroomScreen()
-                }
+                              Section.Classroom -> {
+    ClassroomScreen(db)
+}
             }
 
         }
